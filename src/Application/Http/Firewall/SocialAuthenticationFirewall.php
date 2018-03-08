@@ -67,17 +67,17 @@ class SocialAuthenticationFirewall extends AuthenticationFirewall
     protected function processAuthentication(Request $request): ?Response
     {
         try {
-            if ($this->authenticationRequest->isLogin($request)) {
-                $this->authenticationRequest->extract($request);
+            if ($this->authenticationRequest->isRedirect($request)) {
+                $token = $this->socialAuthenticator->createToken($request, $this->securityKey);
 
-                return $this->redirectToSocialProvider->startAuthentication($request);
+                $this->guard->put($token);
+
+                return null;
             }
 
-            $token = $this->socialAuthenticator->createToken($request, $this->securityKey);
+            $this->authenticationRequest->extract($request);
 
-            $this->guard->put($token);
-
-            return null;
+            return $this->redirectToSocialProvider->startAuthentication($request);
         } catch (InvalidSocialProvider | InvalidStateException | ClientException $exception) {
             if (!$exception instanceof InvalidSocialProvider) {
                 $exception = new AuthenticationException('Authentication failed', 0, $exception);

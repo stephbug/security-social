@@ -4,26 +4,37 @@ declare(strict_types=1);
 
 namespace StephBug\SecuritySocial\Application\Values;
 
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
-use StephBug\SecurityModel\Application\Values\UniqueId;
+use StephBug\SecurityModel\Application\Exception\Assert\Secure;
+use StephBug\SecurityModel\Application\Values\Contract\SecurityValue;
 
-class SocialUserId extends UniqueId
+class SocialUserId implements SecurityValue
 {
-    private function __construct(UuidInterface $uniqueId)
+    /**
+     * @var string
+     */
+    private $uid;
+
+    private function __construct(string $uid)
     {
-        $this->uniqueId = $uniqueId;
+        $this->uid = $uid;
     }
 
     public static function fromString($uid): self
     {
-        self::validate($uid);
+        Secure::notNull($uid);
+        Secure::string($uid);
+        Secure::notEmpty($uid);
 
         return new self($uid);
     }
 
-    public static function nextIdentity(): self
+    public function sameValueAs(SecurityValue $aValue): bool
     {
-        return new self(Uuid::uuid4());
+        return $aValue instanceof $this && $this->uid === $aValue->value();
+    }
+
+    public function value(): string
+    {
+        return $this->uid;
     }
 }

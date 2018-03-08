@@ -19,7 +19,7 @@ class SocialId extends UniqueId
     {
         self::validate($uid);
 
-        return new self($uid);
+        return new self(Uuid::fromString($uid));
     }
 
     public static function nextIdentity(): self
