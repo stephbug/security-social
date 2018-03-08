@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace StephBug\SecuritySocial\User;
 
 use Illuminate\Support\Collection;
+use StephBug\SecurityModel\Application\Values\Contract\Credentials;
 use StephBug\SecurityModel\Application\Values\Contract\EmailAddress as EmailContract;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UniqueIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
+use StephBug\SecuritySocial\Application\Values\SocialCredentials;
 use StephBug\SecuritySocial\Application\Values\SocialId;
 use StephBug\SecuritySocial\Application\Values\SocialProvider;
 use StephBug\SecuritySocial\Application\Values\SocialProviderAllowed;
@@ -31,7 +33,7 @@ class GenericUserSocial implements UserSocial, UserToken
     public function getIdentifier(): SecurityIdentifier
     {
         return SocialUserIdentifier::fromValues(
-            $this->getSocialUserId()->identify(),
+            $this->getSocialUserId()->value(),
             $this->getSocialProvider()->getName()
         );
     }
@@ -58,7 +60,12 @@ class GenericUserSocial implements UserSocial, UserToken
 
     public function getSocialProvider(): SocialProvider
     {
-        return SocialProviderAllowed::fromString($this->attributes['social_user_provider']);
+        return SocialProviderAllowed::fromString($this->attributes['social_provider_name']);
+    }
+
+    public function getSocialTokens(): Credentials
+    {
+       return SocialCredentials::fromString($this->attributes['access_token'], $this->attributes['refresh_token']);
     }
 
     public function getInformation(): array

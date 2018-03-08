@@ -6,7 +6,6 @@ namespace StephBug\SecuritySocial\Authentication\Token;
 
 use StephBug\SecurityModel\Application\Values\Contract\Credentials;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
-use StephBug\SecurityModel\Application\Values\EmptyCredentials;
 use StephBug\SecurityModel\Application\Values\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\Token;
 use StephBug\SecuritySocial\Application\Values\SocialProvider;
@@ -23,20 +22,30 @@ class SocialToken extends Token
      */
     private $securityKey;
 
-    public function __construct(UserToken $user, SocialProvider $socialProvider, SecurityKey $securityKey, array $roles = [])
+    /**
+     * @var Credentials
+     */
+    private $credentials;
+
+    public function __construct(UserToken $user,
+                                SocialProvider $socialProvider,
+                                SecurityKey $securityKey,
+                                Credentials $credentials,
+                                array $roles = [])
     {
         parent::__construct($roles);
 
         $this->setUser($user);
         $this->socialProvider = $socialProvider;
         $this->securityKey = $securityKey;
+        $this->credentials = $credentials;
 
         count($roles) > 0 and $this->setAuthenticated(true);
     }
 
     public function getCredentials(): Credentials
     {
-        return new EmptyCredentials();
+        return $this->credentials;
     }
 
     public function getSecurityKey(): SecurityKey

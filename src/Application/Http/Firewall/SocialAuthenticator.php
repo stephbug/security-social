@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace StephBug\SecuritySocial\Application\Http\Firewall;
 
 use Illuminate\Http\Request;
+use StephBug\SecurityModel\Application\Values\EmptyCredentials;
 use StephBug\SecurityModel\Application\Values\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\SimplePreAuthenticator;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
@@ -38,7 +39,13 @@ class SocialAuthenticator implements SimplePreAuthenticator
         try {
             $user = $userProvider->requireByIdentifier($tokenUser->getIdentifier());
 
-            return new SocialToken($user, $socialProvider, $securityKey, $user->getRoles());
+            return new SocialToken(
+                $user,
+                $socialProvider,
+                $securityKey,
+                $user->getSocialTokens,
+                $user->getRoles()
+            );
         } catch (UserNotFound $userNotFound) {
             return $token;
         }
@@ -53,6 +60,11 @@ class SocialAuthenticator implements SimplePreAuthenticator
     {
         $userSocial = $this->serviceManager->socialUser($request);
 
-        return new SocialToken($userSocial, $this->serviceManager->socialProvider($request), $securityKey);
+        return new SocialToken(
+            $userSocial,
+            $this->serviceManager->socialProvider($request),
+            $securityKey,
+            new EmptyCredentials()
+        );
     }
 }

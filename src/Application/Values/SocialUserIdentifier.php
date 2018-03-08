@@ -46,7 +46,7 @@ class SocialUserIdentifier implements SecurityIdentifier, UserToken
 
     public function identify(): array
     {
-        return [$this->userId->identify(), $this->socialProvider->getName()];
+        return [$this->userId->value(), $this->socialProvider->getName()];
     }
 
     public function sameValueAs(SecurityValue $aValue): bool
