@@ -51,11 +51,6 @@ class SocialAuthenticator implements SimplePreAuthenticator
         }
     }
 
-    public function supportsToken(Tokenable $token, SecurityKey $securityKey): bool
-    {
-        return $token instanceof SocialToken && $securityKey->sameValueAs($token->getSecurityKey());
-    }
-
     public function createToken(Request $request, SecurityKey $securityKey): Tokenable
     {
         $userSocial = $this->serviceManager->socialUser($request);
@@ -66,5 +61,10 @@ class SocialAuthenticator implements SimplePreAuthenticator
             $securityKey,
             new EmptyCredentials()
         );
+    }
+
+    public function supportsToken(Tokenable $token, SecurityKey $securityKey): bool
+    {
+        return $token instanceof SocialToken && $securityKey->sameValueAs($token->getSecurityKey());
     }
 }
