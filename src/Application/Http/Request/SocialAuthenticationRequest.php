@@ -17,16 +17,16 @@ class SocialAuthenticationRequest implements AuthenticationRequest
     /**
      * @var string
      */
-    private $providerName;
+    private $providerParameter;
 
     /**
      * @var string
      */
     private $loginRouteName;
 
-    public function __construct(string $providerName, string $loginRouteName)
+    public function __construct(string $providerParameter, string $loginRouteName)
     {
-        $this->providerName = $providerName;
+        $this->providerParameter = $providerParameter;
         $this->loginRouteName = $loginRouteName;
     }
 
@@ -34,7 +34,7 @@ class SocialAuthenticationRequest implements AuthenticationRequest
     {
         try {
             return SocialProviderAllowed::fromString(
-                $request->route()->parameter($this->providerName)
+                $request->route()->parameter($this->providerParameter)
             );
         } catch (SecurityValueFailed $invalidProvider) {
             throw new InvalidSocialProvider('Invalid social provider', 0, $invalidProvider);
