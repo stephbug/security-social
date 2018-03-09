@@ -51,6 +51,7 @@
     },
     "laravel": {
       "providers": [
+        "StephBug\\SecuritySocial\\Application\\Provider\\SecuritySocialServiceProvider"
       ]
     }
   }
