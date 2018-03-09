@@ -65,7 +65,7 @@ class GenericUserSocial implements UserSocial, UserToken
 
     public function getSocialTokens(): Credentials
     {
-       return SocialCredentials::fromString($this->attributes['access_token'], $this->attributes['refresh_token']);
+       return SocialCredentials::fromString($this->attributes['access_token'], $this->attributes['secret_token']);
     }
 
     public function getInformation(): array
