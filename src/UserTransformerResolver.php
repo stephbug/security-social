@@ -23,14 +23,14 @@ class UserTransformerResolver
     public function resolve(SocialProvider $provider): UserSocialTransformer
     {
         $transformer =
-            $this->fromConfig('providers.' . $provider->getName() . '.transformer')
-            ?? $this->fromConfig('transformer');
+            $this->fromConfig('.providers.' . $provider->getName() . '.transformer')
+            ?? $this->fromConfig('.transformer');
 
         return $this->app->make($transformer);
     }
 
-    protected function fromConfig(string $key, $default = null): string
+    protected function fromConfig(string $key, $default = null): ?string
     {
-        return $this->app->make('config')->get('security_socials.' . $key, $default);
+        return $this->app->make('config')->get('security_socials' . $key, $default);
     }
 }
