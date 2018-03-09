@@ -18,7 +18,7 @@ class UserTransformer implements UserSocialTransformer
             'social_provider_name' => $socialProvider->getName(),
             'social_user_email' => $socialiteUser->getEmail(),
             'access_token' => $socialiteUser->token ?? null,
-            'secret_token' => $socialiteUser->refreshToken ?? null,
+            'secret_token' => $socialiteUser->refreshToken ?? $socialiteUser->tokenSecret,
             'information' => $socialiteUser->getRaw()
         ]);
     }

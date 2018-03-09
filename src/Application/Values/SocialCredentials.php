@@ -18,27 +18,27 @@ class SocialCredentials implements Credentials
     /**
      * @var string
      */
-    private $refreshToken;
+    private $secretToken;
 
-    private function __construct(string $accessToken = null, string $refreshToken = null)
+    private function __construct(string $accessToken = null, string $secretToken = null)
     {
         $this->accessToken = $accessToken;
-        $this->refreshToken = $refreshToken;
+        $this->secretToken = $secretToken;
     }
 
-    public static function fromString($accessToken = null, $refreshToken = null)
+    public static function fromString($accessToken = null, $secretToken = null)
     {
         if ($accessToken) {
             Secure::string($accessToken);
             Secure::notEmpty($accessToken);
         }
 
-        if ($refreshToken) {
-            Secure::string($refreshToken);
-            Secure::notEmpty($refreshToken);
+        if ($secretToken) {
+            Secure::string($secretToken);
+            Secure::notEmpty($secretToken);
         }
 
-        return new self($accessToken, $refreshToken);
+        return new self($accessToken, $secretToken);
     }
 
     public function credentials(): ?string
@@ -46,15 +46,15 @@ class SocialCredentials implements Credentials
         return $this->accessToken;
     }
 
-    public function refreshToken(): ?string
+    public function secretToken(): ?string
     {
-        return $this->refreshToken;
+        return $this->secretToken;
     }
 
     public function sameValueAs(SecurityValue $aValue): bool
     {
         return $aValue instanceof $this
             && $this->accessToken === $aValue->credentials()
-            && $this->refreshToken === $aValue->refreshToken();
+            && $this->secretToken === $aValue->secretToken();
     }
 }
