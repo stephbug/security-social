@@ -29,7 +29,12 @@ class UserTransformerResolver
         return $this->app->make($transformer);
     }
 
-    protected function fromConfig(string $key, $default = null): ?string
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    protected function fromConfig(string $key, $default = null)
     {
         return $this->app->make('config')->get('security_socials' . $key, $default);
     }
