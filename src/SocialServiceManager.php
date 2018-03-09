@@ -12,7 +12,6 @@ use StephBug\SecurityModel\User\Exception\BadCredentials;
 use StephBug\SecuritySocial\Application\Http\Request\SocialAuthenticationRequest;
 use StephBug\SecuritySocial\Application\Values\SocialProvider;
 use StephBug\SecuritySocial\User\UserSocial;
-use StephBug\SecuritySocial\User\UserSocialTransformer;
 
 class SocialServiceManager
 {
@@ -27,17 +26,17 @@ class SocialServiceManager
     private $authenticationRequest;
 
     /**
-     * @var UserSocialTransformer
+     * @var UserTransformerResolver
      */
-    private $transformer;
+    private $resolver;
 
     public function __construct(Factory $socialite,
                                 SocialAuthenticationRequest $authenticationRequest,
-                                UserSocialTransformer $transformer)
+                                UserTransformerResolver $resolver)
     {
         $this->socialite = $socialite;
         $this->authenticationRequest = $authenticationRequest;
-        $this->transformer = $transformer;
+        $this->resolver = $resolver;
     }
 
     public function socialUser(Request $request): UserSocial
@@ -46,10 +45,9 @@ class SocialServiceManager
             throw BadCredentials::invalid();
         }
 
-        return $this->transformer->transform(
-            $this->socialiteUser($request),
-            $this->socialProvider($request)
-        );
+        $name = $this->socialProvider($request);
+
+        return $this->resolver->resolve($name)->transform($this->socialiteUser($request), $name);
     }
 
     public function socialiteInstance(Request $request): ProviderSocialite
