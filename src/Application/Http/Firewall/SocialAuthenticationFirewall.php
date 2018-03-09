@@ -70,7 +70,9 @@ class SocialAuthenticationFirewall extends AuthenticationFirewall
             if ($this->authenticationRequest->isRedirect($request)) {
                 $token = $this->socialAuthenticator->createToken($request, $this->securityKey);
 
-                $this->guard->put($token);
+                $this->guard->put(
+                    $this->guard->authenticate($token)
+                );
 
                 return null;
             }
