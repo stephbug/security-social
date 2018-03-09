@@ -43,8 +43,8 @@ class SocialAuthenticator implements SimplePreAuthenticator
                 $user,
                 $socialProvider,
                 $securityKey,
-                $user->getSocialTokens,
-                $user->getRoles()
+                $user->getSocialTokens(),
+                $user->getRoles()->toArray()
             );
         } catch (UserNotFound $userNotFound) {
             return $token;
