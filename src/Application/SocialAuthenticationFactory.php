@@ -17,7 +17,7 @@ use StephBug\SecuritySocial\Application\Http\Request\SocialAuthenticationRequest
 use StephBug\SecuritySocial\Application\Http\Response\RedirectToSocialProvider;
 use StephBug\SecuritySocial\Authentication\Provider\SocialAuthenticationProvider;
 use StephBug\SecuritySocial\SocialServiceManager;
-use StephBug\SecuritySocial\User\UserTransformer;
+use StephBug\SecuritySocial\UserTransformerResolver;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
 class SocialAuthenticationFactory implements AuthenticationServiceFactory
@@ -91,7 +91,7 @@ class SocialAuthenticationFactory implements AuthenticationServiceFactory
         return new SocialServiceManager(
             $this->app->make(Factory::class),
             $this->getAuthenticationRequest(),
-            new UserTransformer()
+            new UserTransformerResolver($this->app)
         );
     }
 
