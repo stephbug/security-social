@@ -14,7 +14,7 @@ class CreateSocialUsersTable extends Migration
             $table->string('social_user_id',100);
             $table->string('social_provider_name',50);
             $table->string('social_user_email',150);
-            $table->string('access_token',150)->nullable();
+            $table->string('access_token',150);
             $table->string('secret_token',150)->nullable();
             $table->json('information');
             $table->timestamps();

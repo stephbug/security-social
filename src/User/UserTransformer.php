@@ -18,8 +18,21 @@ class UserTransformer implements UserSocialTransformer
             'social_provider_name' => $socialProvider->getName(),
             'social_user_email' => $socialiteUser->getEmail(),
             'access_token' => $socialiteUser->token ?? null,
-            'secret_token' => $socialiteUser->refreshToken ?? $socialiteUser->tokenSecret,
+            'secret_token' => $this->getSecretToken($socialiteUser),
             'information' => $socialiteUser->getRaw()
         ]);
+    }
+
+    private function getSecretToken(UserSocialite $user): ?string
+    {
+        if (property_exists($user, 'refreshToken')) {
+            return $user->refreshToken;
+        }
+
+        if (property_exists($user, 'tokenSecret')) {
+            return $user->tokenSecret;
+        }
+
+        return null;
     }
 }
